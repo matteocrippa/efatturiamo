@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+ <title>Inserisci i tuoi dati &middot; eFatturiamo.it</title>
+ <link rel="stylesheet" href="css/reset.css" />
+ <link rel="stylesheet" href="css/text.css" />
+ <link rel="stylesheet" href="css/960.css" />
+ <link rel="stylesheet" href="css/efatturiamo.css" />
+ 
+<link rel='stylesheet' type='text/css' href='style.css' />
+<link rel='stylesheet' type='text/css' href='print.css' media="print" />
+<script type='text/javascript' src='jquery-1.3.2.min.js'></script>
+<script type='text/javascript' src='example.js'></script>
+ 
+ 
+ <script type="text/javascript" src="mootools-1.2.4-core-yc.js"></script>
+ <script src="clientside.moo.v1.2.packed.js" type="text/javascript" charset="utf-8"></script>
+ <script src="clientside.1.2.js" type="text/javascript" charset="utf-8"></script>
+ <script type="text/javascript" src="json2.js"></script>
+ <script type="text/javascript">
+   var d = new Date();
+
+   var anno = d.getYear();
+
+   anno = anno.toString().substr(anno.toString().length-2,2);
+   
+   var numeroFattura = localStorage.getItem('ultimaFatturaNumero');
+   var isProforma = false;
+
+   if(numeroFattura)
+   {
+    if(localStorage.getItem('ultimaFatturaAnno')!=d.getYear())
+     numeroFattura = 1;
+    else
+     numeroFattura++;
+   }
+   else
+    numeroFattura = 1;
+   
+   function listaClienti()
+   {
+    var i=0
+    while(localStorage.getItem('clienti'+i))
+    {
+     var clienti  = new Element('option', {name: JSON.parse(localStorage.getItem('clienti'+i)).nome, text: JSON.parse(localStorage.getItem('clienti'+i)).nome});
+     clienti.inject($('cliente'));
+     i++;
+    }
+    
+   }
+   window.addEvent('domready', function() {
+   listaClienti();
+   });
+  </script>
+ </head>
+<body>
+ <div class="container_16">
+  <!-- header -->
+  <div class="grid_1" style="height:52px;"></div>
+  <div class="grid_1" style="background-image:url('img/angoloss.png'); height:52px;"></div>
+  <div class="grid_12" style="background-image:url('img/headerback.png'); margin-left: -10px; width: 741px; height:52px;">
+   <p style="font-size:32px; text-align:right !important;"><b>eFatturiamo.it</b></p>
+  </div>
+  <div class="grid_1" style="background-image:url('img/angolosd.png'); margin-left: -11px; height:52px;"></div>
+  <div class="clear"></div>
+  <!-- fine header -->
+ 
+  <!-- promo -->
+  <div class="grid_1" style="height:243px;"></div>
+  <div class="grid_1" style="background-image:url('img/latos.png'); height:480px;"></div>
+  <div class="grid_12" style="background-image:url('img/prefooterbackground.png'); margin-left: -10px; width: 741px; height:480px;">
+  <p>
+ <br/>
+ <p>Cliente: <select id="cliente"></select> - <a href="aggiungi-nuovo-cliente.html">Aggiungi Nuovo Cliente</a><br/><br/>
+ Fattura: <script>document.write(numeroFattura);</script>/<script>document.write(anno);</script><br/>
+ Data: <script>document.write(d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear());</script></p>
+ <br/>
+ <p id="lafattura"></p>
+ <script type="text/javascript">
+
+ var tabella = new HtmlTable({
+  properties: {
+   border: 1,
+   cellspacing: 3,
+   width: 500
+  },
+  rows: [
+   ['Prestazione','Importo']
+   ]
+ });
+
+ tabella.table.inject($('lafattura'));
+ 
+ var inputPrestazione = '<input type="text" id="prestazione" />';
+ var inputImporto = '<input type="text" id="prezzoPrestazione" /> <a href="#" class="small green awesome"onclick="aggiungiTask();">+</a>';
+ 
+ tabella.push([inputPrestazione,inputImporto]);
+ 
+ var imponibile = 0;
+ var ritenuta = 0;
+ var netto = 0;
+ 
+ var tasks = new Array();
+
+ function aggiungiTask()
+ {
+  var task = new Array();
+  var nome = $('prestazione').value;
+  var prezzo = $('prezzoPrestazione').value;
+  task.push(nome,prezzo);
+  tasks.push(task);
+  tabella.push([nome,prezzo]);
+  imponibile += parseFloat(prezzo.replace(',','.'));
+  ritenuta = (parseFloat(String(imponibile).replace(',','.'))*20)/100;
+  netto = parseFloat(String(imponibile).replace(',','.')) - ritenuta;
+  $('imponibile').innerHTML = String(imponibile).replace('.',',')+"€";
+  $('ritenuta').innerHTML = String(ritenuta).replace('.',',')+"€";
+  $('netto').innerHTML = String(netto).replace('.',',')+"€";
+ }
+ 
+ function salvaFattura()
+ {
+  localStorage.setItem('ultimaFatturaNumero', numeroFattura);
+  localStorage.setItem('ultimaFatturaAnno', d.getYear());
+  
+  var fattura = {
+     cliente: $('cliente').getSelected(),
+     codice: numeroFattura+"/"+anno,
+     data: d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(),
+     proforma: 0,
+     tasks: tasks
+    };
+
+  localStorage.setItem('fattura'+numeroFattura, JSON.stringify(fattura));
+  
+  location.href = 'stampa.html#'+numeroFattura;
+
+ }
+ </script>
+ Totale Imponibile - <b id="imponibile">0,00€</b><br/>
+ Ritenuta 20% su Imponibile - <b id="ritenuta">0,00€</b><br/>
+ Netto a Pagare - <b id="netto">0,00€</b><br/>
+ 
+ </div>
+ <div class="grid_1" style="background-image:url('img/latodx.png'); margin-left: -11px; height:480px;"></div>
+ <div class="clear"></div>
+ <!-- fine promo -->	
+	
+ <!-- slogan -->
+ <div class="grid_1" style="height:61px;"></div>
+ <div class="grid_1" style="background-image:url('img/slogansx.png'); height:61px;"></div>
+ <div class="grid_12" style="background-image:url('img/slogan.png'); margin-left: -10px; width: 741px; height:61px;">
+  <p style="text-align:right;"><a class="large red awesome" href="#" onclick="salvaFattura();return false;">Salva Fattura</a> <a class="large red awesome" href="#" onclick="salvaFattura();">Salva Proforma</a></p>
+ </div>
+ <div class="grid_1" style="background-image:url('img/slogandx.png'); margin-left: -11px; height:61px;"></div>
+ <div class="clear"></div>
+ <!-- fine slogan -->
+
+
+	<!-- prefooter -->
+	<div class="grid_1" style="height:40px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/latos.png'); height:40px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/prefooterbackground.png'); margin-left: -10px; width: 741px; height:40px;">
+         <!--p><b>*</b> <small style="font-size:10px;">ti ricordiamo che <b>eFatturiamo</b> non salverà alcun dato sul proprio server, tutti i dati verranno salvati nel browser del vostro <em>computer</em> o <em>cellulare</em>.</small></p-->
+	</div>
+	<div class="grid_1" style="background-image:url('img/latodx.png'); margin-left: -10px; height:40px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine prefooter -->
+	
+	<!-- footer -->
+	<div class="grid_1" style="height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footersx.png'); height:6px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/footer.png'); margin-left: -10px; width: 741px; height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footerdx.png'); margin-left: -11px; height:6px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine footer -->
+	</div>
+<!-- end .container_16 -->
+</body>
+</html>

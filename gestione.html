@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Inserisci i tuoi dati &middot; eFatturiamo</title>
+<link rel="stylesheet" href="css/reset.css" />
+<link rel="stylesheet" href="css/text.css" />
+<link rel="stylesheet" href="css/960.css" />
+<link rel="stylesheet" href="css/efatturiamo.css" />
+  <script type="text/javascript" src="mootools-1.2.4-core-yc.js"></script>
+  <script src="clientside.moo.v1.2.packed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="clientside.1.2.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" src="json2.js"></script>
+  <script type="text/javascript">
+   
+   function listaFatture()
+   {
+    var i=1;
+    
+    while(localStorage.getItem('fattura'+i))
+    {
+     var clienti  = new Element('p', {html: JSON.parse(localStorage.getItem('fattura'+i)).codice+" "+JSON.parse(localStorage.getItem('fattura'+i)).data+" <a class='small blue awesome' href='stampa.html#"+i+"'>stampa</a> <a class='small green awesome' href='modifica.html#"+i+"' >modifica</a>"});
+     clienti.inject($('lista'));
+     i++;
+    }
+    
+   }
+   
+   function cancellaFattura(id)
+   {
+    localStorage.removeItem('fattura'+id);
+   }
+   
+   window.addEvent('domready', function() {
+   listaFatture();
+   });
+  </script>
+</head>
+<body>
+
+<div class="container_16">
+	<!-- header -->
+	<div class="grid_1" style="height:52px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/angoloss.png'); height:52px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/headerback.png'); margin-left: -10px; width: 741px; height:52px;">
+		<p style="font-size:32px; text-align:right !important;"><b>eFatturiamo</b></p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/angolosd.png'); margin-left: -11px; height:52px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine header -->
+
+
+	
+	<!-- slogan -->
+	<div class="grid_1" style="height:61px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/slogansx.png'); height:61px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/slogan.png'); margin-left: -10px; width: 741px; height:61px;">
+		<p style="text-align:left;">
+		 <a class="large red awesome" href="fattura.html">Nuova fattura »</a>
+		</p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/slogandx.png'); margin-left: -11px; height:61px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine slogan -->
+	
+	<!-- prefooter -->
+	<div class="grid_1" style="height:400px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/latos.png'); height:400px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/prefooterbackground.png'); margin-left: -10px; width: 741px; height:400px;">
+         <p id="lista"></p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/latodx.png'); margin-left: -10px; height:400px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine prefooter -->
+	
+	<!-- footer -->
+	<div class="grid_1" style="height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footersx.png'); height:6px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/footer.png'); margin-left: -10px; width: 741px; height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footerdx.png'); margin-left: -11px; height:6px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine footer -->
+	</div>
+<!-- end .container_16 -->
+</body>
+</html>

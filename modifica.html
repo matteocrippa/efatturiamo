@@ -1,0 +1,127 @@
+<html>
+ <head>
+  <script type="text/javascript" src="mootools-1.2.4-core-yc.js"></script>
+  <script src="clientside.moo.v1.2.packed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="clientside.1.2.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" src="json2.js"></script>
+  <script type="text/javascript">
+   var datiFattura = localStorage.getItem('fattura'+location.hash.replace('#',''));
+   
+   function listaClienti()
+   {
+    var i=0
+    while(localStorage.getItem('clienti'+i))
+    {
+     var clienti;
+     
+     if(JSON.parse(datiFattura).cliente == JSON.parse(localStorage.getItem('clienti'+i)).nome)
+      clienti  = new Element('option', {name: JSON.parse(localStorage.getItem('clienti'+i)).nome, text: JSON.parse(localStorage.getItem('clienti'+i)).nome, selected: 'selected'});
+     else
+      clienti  = new Element('option', {name: JSON.parse(localStorage.getItem('clienti'+i)).nome, text: JSON.parse(localStorage.getItem('clienti'+i)).nome});
+
+     clienti.inject($('cliente'));
+     i++;
+    }
+    
+   }
+   window.addEvent('domready', function() {
+   listaClienti();
+   $('data').value = JSON.parse(datiFattura).data;
+   $('imponibile').innerHTML = String(imponibile).replace('.',',')+"€";
+   $('ritenuta').innerHTML = String(ritenuta).replace('.',',')+"€";
+   $('netto').innerHTML = String(netto).replace('.',',')+"€";
+   });
+  </script>
+ </head>
+<body>
+ <br/>
+ <p>Cliente: <select id="cliente"></select> - <a href="clienti.html">Aggiungi Nuovo Cliente</a></p>
+ <p>Fattura: <script>document.write(JSON.parse(datiFattura).codice);</script></p>
+ <p>Data: <input type="text" name="data" id="data" /></p>
+ <br/>
+ <p id="lafattura"></p>
+ <script type="text/javascript">
+
+ var tabella = new HtmlTable({
+  properties: {
+   border: 1,
+   cellspacing: 3,
+   width: 500
+  },
+  rows: [
+   ['Prestazione','Importo']
+   ]
+ });
+
+ tabella.table.inject($('lafattura'));
+  
+  
+   var imponibile = 0;
+ var ritenuta = 0;
+ var netto = 0;
+ 
+ var dati = JSON.parse(datiFattura).tasks;
+ var trovato = (dati.match(/\"(.*?)\"/g));
+  for (i=0;i<trovato.length;i+=2)
+  {
+   tabella.push([trovato[i].replace('"','').replace('"',''),"<center>"+trovato[i+1].replace('"','').replace('"','').replace('.',',')+"€</center>"]);
+   imponibile += parseFloat(trovato[i+1].replace('"','').replace('"','').replace(',','.'));
+  } 
+ 
+  ritenuta = (parseFloat(String(imponibile).replace(',','.'))*20)/100;
+  netto = parseFloat(String(imponibile).replace(',','.')) - ritenuta;
+
+
+ 
+ function roundNumber(num, dec) {
+	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return result;
+}
+
+ var tasks = new Array();
+
+ function aggiungiTask()
+ {
+  var task = new Array();
+  var nome = $('prestazione').value;
+  var prezzo = $('prezzoPrestazione').value;
+  task.push(nome,prezzo);
+  tasks.push(task);
+  tabella.push([nome,prezzo]);
+  imponibile += parseFloat(prezzo.replace(',','.'));
+  ritenuta = (parseFloat(String(imponibile).replace(',','.'))*20)/100;
+  netto = parseFloat(String(imponibile).replace(',','.')) - ritenuta;
+  $('imponibile').innerHTML = String(imponibile).replace('.',',')+"€";
+  $('ritenuta').innerHTML = String(ritenuta).replace('.',',')+"€";
+  $('netto').innerHTML = String(netto).replace('.',',')+"€";
+ }
+ 
+ function salvaFattura()
+ {
+  localStorage.setItem('ultimaFatturaNumero', numeroFattura);
+  localStorage.setItem('ultimaFatturaAnno', d.getYear());
+  
+  var fattura = {
+     cliente: $('cliente').getSelected(),
+     codice: numeroFattura+"/"+anno,
+     data: d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(),
+     proforma: 0,
+     tasks: tasks
+    };
+
+  localStorage.setItem('fattura'+numeroFattura, JSON.stringify(fattura));
+  
+  location.href = 'stampa.html#'+numeroFattura;
+
+ }
+ </script>
+ Totale Imponibile - <b id="imponibile">0,00€</b><br/>
+ Ritenuta 20% su Imponibile - <b id="ritenuta">0,00€</b><br/>
+ Netto a Pagare - <b id="netto">0,00€</b><br/>
+ <br/>
+ <br/>
+ <br />
+ <br />
+ <input type="submit" name="salva" value="Salva" onclick="salvaFattura();return false;" /> -  <input type="submit" name="Salva Proforma" value="proforma" /> 
+</body>
+</html>

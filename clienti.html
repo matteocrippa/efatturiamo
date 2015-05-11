@@ -1,0 +1,50 @@
+<html>
+ <head>
+  <script type="text/javascript" src="json2.js"></script>
+  <script type="text/javascript">
+   function salvaCliente()
+   {
+    var cliente = {
+     nome: document.getElementById('nome').value+" "+document.getElementById('cognome').value,
+     via: document.getElementById('via').value,
+     citta: document.getElementById('citta').value,
+     cap: document.getElementById('cap').value,
+     piva: document.getElementById('piva').value,
+     cf: document.getElementById('cf').value
+    };
+    
+    var i = 0;
+    
+    while(localStorage.getItem('clienti'+i))
+     i++;
+        
+    localStorage.setItem('clienti'+i, JSON.stringify(cliente));
+
+   }
+
+  </script>
+ </head>
+<body>
+<a href="fattura.html">Torna Indietro</a><br/>
+Aggiungi Cliente
+<br />
+<form onsubmit="salvaCliente();return false;">
+Nome<br/>
+<input type="text" id="nome" /><br/>
+Cognome<br/>
+<input type="text" id="cognome" /><br/>
+Via<br/>
+<input type="text" id="via" /><br/>
+Cap<br/>
+<input type="text" id="cap" /><br/>
+Città<br/>
+<input type="text" id="citta" /><br/>
+Partita Iva<br/>
+<input type="text" id="piva" /><br/>
+Codice Fiscale<br/>
+<input type="text" id="cf" /><br/>
+<br/>
+<input type="submit" value="Salva"/>
+</form>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Inserisci i tuoi dati &middot; eFatturiamo</title>
+<link rel="stylesheet" href="css/reset.css" />
+<link rel="stylesheet" href="css/text.css" />
+<link rel="stylesheet" href="css/960.css" />
+<link rel="stylesheet" href="css/efatturiamo.css" />
+<script type="text/javascript" src="json2.js"></script>
+  <script type="text/javascript">
+   function salvaCliente()
+   {
+    var cliente = {
+     nome: document.getElementById('nome').value+" "+document.getElementById('cognome').value,
+     via: document.getElementById('via').value,
+     citta: document.getElementById('citta').value,
+     cap: document.getElementById('cap').value,
+     piva: document.getElementById('piva').value,
+     cf: document.getElementById('cf').value
+    };
+    
+    var i = 0;
+    
+    while(localStorage.getItem('clienti'+i))
+     i++;
+        
+    localStorage.setItem('clienti'+i, JSON.stringify(cliente));
+
+   }
+
+
+  </script>
+</head>
+<body>
+
+<div class="container_16">
+	<!-- header -->
+	<div class="grid_1" style="height:52px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/angoloss.png'); height:52px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/headerback.png'); margin-left: -10px; width: 741px; height:52px;">
+		<p style="font-size:32px; text-align:right !important;"><b>eFatturiamo</b></p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/angolosd.png'); margin-left: -11px; height:52px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine header -->
+
+	<!-- promo -->
+	<div class="grid_1" style="height:243px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/latos.png'); height:340px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/prefooterbackground.png'); margin-left: -10px; width: 741px; height:340px;">
+         <p>
+          Inserisci gli estremi di fatturazione dei tuoi clienti:<br/>
+          <br />
+          Nome<br/>
+	  <input type="text" id="nome" /><br/>
+	  Cognome<br/>
+	  <input type="text" id="cognome" /><br/>
+	  Via<br/>
+	  <input type="text" id="via" /><br/>
+	  Cap<br/>
+	  <input type="text" id="cap" /><br/>
+	  Città<br/>
+	  <input type="text" id="citta" /><br/>
+	  Partita Iva<br/>
+	  <input type="text" id="piva" /><br/>
+	  Codice Fiscale<br/>
+	  <input type="text" id="cf" /><br/>
+          <br/>
+         </p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/latodx.png'); margin-left: -11px; height:340px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine promo -->	
+	
+	<!-- slogan -->
+	<div class="grid_1" style="height:61px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/slogansx.png'); height:61px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/slogan.png'); margin-left: -10px; width: 741px; height:61px;">
+		<p style="text-align:right;">
+		 <a class="large green awesome" href="fattura.html">« Torna Indietro</a>
+		 <a class="large red awesome" href="#" onclick="salvaCliente();return false;">Salva i dati * del tuo cliente »</a>
+		</p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/slogandx.png'); margin-left: -11px; height:61px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine slogan -->
+	
+	<!-- prefooter -->
+	<div class="grid_1" style="height:40px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/latos.png'); height:40px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/prefooterbackground.png'); margin-left: -10px; width: 741px; height:40px;">
+         <p><b>*</b> <small style="font-size:10px;">ti ricordiamo che <b>eFatturiamo</b> non salverà alcun dato sul proprio server, tutti i dati verranno salvati nel browser del vostro <em>computer</em> o <em>cellulare</em>.</small></p>
+	</div>
+	<div class="grid_1" style="background-image:url('img/latodx.png'); margin-left: -10px; height:40px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine prefooter -->
+	
+	<!-- footer -->
+	<div class="grid_1" style="height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footersx.png'); height:6px;">
+	</div>
+	<div class="grid_12" style="background-image:url('img/footer.png'); margin-left: -10px; width: 741px; height:6px;">
+	</div>
+	<div class="grid_1" style="background-image:url('img/footerdx.png'); margin-left: -11px; height:6px;">
+	</div>
+	<div class="clear"></div>
+	<!-- fine footer -->
+	</div>
+<!-- end .container_16 -->
+</body>
+</html>

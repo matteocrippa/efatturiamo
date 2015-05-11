@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/reset.css" />
+<link rel="stylesheet" href="css/text.css" />
+<link rel="stylesheet" href="css/960.css" />
+<link rel="stylesheet" href="css/fattura.css" />
+<script type="text/javascript" src="mootools-1.2.4-core-yc.js"></script>
+<script src="clientside.moo.v1.2.packed.js" type="text/javascript" charset="utf-8"></script>
+<script src="clientside.1.2.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="json2.js"></script>
+<script type="text/javascript">
+  var estremi = localStorage.getItem('estremi');
+  
+  //var numeroFattura = localStorage.getItem('ultimaFatturaNumero');
+  var datiFattura = localStorage.getItem('fattura'+location.hash.replace('#',''));
+
+  var codiceFattura = JSON.parse(datiFattura).codice;
+  var dataFattura = JSON.parse(datiFattura).data;
+   
+  var nomeCliente = JSON.parse(datiFattura).cliente;
+   
+  var i=0
+   
+  while(localStorage.getItem('clienti'+i))
+  {
+   var cliente = localStorage.getItem('clienti'+i);
+   if(JSON.parse(cliente).nome == nomeCliente)
+    break;
+   i++;
+  } 
+  </script>
+</head>
+<body>
+<div class="container_16">
+ <div class="grid_3">
+ <script type="text/javascript">
+   document.write(JSON.parse(estremi).nome);
+ </script>
+<br/>
+ <script type="text/javascript">
+   document.write(JSON.parse(estremi).via);
+ </script>
+<br/>
+ <script type="text/javascript">
+   document.write(JSON.parse(estremi).cap+" - "+JSON.parse(estremi).citta);
+ </script>
+<br/>
+P.Iva: <script type="text/javascript">
+   document.write(JSON.parse(estremi).piva);
+ </script>
+<br/>
+C.F.: <script type="text/javascript">
+   document.write(JSON.parse(estremi).cf);
+ </script>
+ <br/>
+</div>
+ <div class="grid_9">
+  &nbsp;
+ </div>
+ <div class="grid_3">
+   <p>Fattura: <script>document.write(codiceFattura);</script><br/>
+   Data: <script>document.write(dataFattura);</script>
+   <br/>
+   </p>
+ </div>
+<div class="clear"></div>
+<hr />
+<div class="grid_3">
+ <b>Cliente</b>: <script>document.write(JSON.parse(cliente).nome); document.title = 'Fattura '+codiceFattura+' del '+dataFattura+' a nome '+JSON.parse(cliente).nome;</script><br />
+ <script>document.write(JSON.parse(cliente).via);</script><br />
+ <script>document.write(JSON.parse(cliente).cap+" - "+JSON.parse(estremi).citta);</script><br />
+ <script>document.write("P.Iva: "+JSON.parse(cliente).piva+" CF: "+JSON.parse(estremi).cf);</script>
+</div>
+<div class="clear"></div>
+
+<div class="grid_1" style="margin-top:50px;">&nbsp;</div>
+<div class="grid_12" style="margin-top:50px;">
+ <p id="lafattura"></p>
+</div>
+<div class="clear" style="margin-top:50px;"></div>
+ <script type="text/javascript">
+
+ var tabella = new HtmlTable({
+  properties: {
+   border: 1,
+   cellspacing: 3,
+   width: 600
+  },
+  rows: [
+   ['<b>Prestazione</b>','<center><b>Importo</b></center>']
+   ]
+ });
+
+ tabella.table.inject($('lafattura'));
+ 
+ var imponibile = 0;
+ var ritenuta = 0;
+ var netto = 0;
+ 
+ var dati = JSON.parse(datiFattura).tasks;
+ var trovato = (dati.match(/\"(.*?)\"/g));
+  for (i=0;i<trovato.length;i+=2)
+  {
+   tabella.push([trovato[i].replace('"','').replace('"',''),"<center>"+trovato[i+1].replace('"','').replace('"','').replace('.',',')+"€</center>"]);
+   imponibile += parseFloat(trovato[i+1].replace('"','').replace('"','').replace(',','.'));
+  } 
+ 
+  ritenuta = (parseFloat(String(imponibile).replace(',','.'))*20)/100;
+  netto = parseFloat(String(imponibile).replace(',','.')) - ritenuta;
+
+
+   window.addEvent('domready', function() {
+    tabella.push([' ',' ']);
+    tabella.push(['<em><center>Totale Imponibile</center></em>','<center>'+String(imponibile).replace('.',',')+"€</center>"]);
+    tabella.push(['<em><center>Ritenuta 20% su Imponibile <b>*</b></center></em>','<center>'+String(ritenuta).replace('.',',')+"€</center>"]);
+    tabella.push(['<em><center>Netto a Pagare</center></em>','<center>'+String(netto).replace('.',',')+"€</center>"]);
+
+   });
+ </script>
+ <br/>
+ <br/>
+ <small>* Operazione effettuata ai sensi dell'art.1 Comma 100 della Legge Finanziaria per il 2008</small>
+</body>
+</html>
